@@ -4,7 +4,7 @@
 # @Author:      Kuro
 # @Time:        2/19/2025 10:15 AM
 
-from .celery_app import celery_app
+from celery_app import celery_app
 
 
 @celery_app .task()
