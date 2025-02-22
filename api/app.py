@@ -5,6 +5,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from sentence_transformers import SentenceTransformer
+from unsloth import FastLanguageModel
 
 warnings.filterwarnings("ignore")
 
@@ -32,6 +33,12 @@ app.secret_key = config.SECRET_KEY  # Store secret key in app attribute
 
 @app.get("/")
 async def read_root(request: Request):
+    model, tokenizer = FastLanguageModel.from_pretrained(
+        model_name="unsloth/llama-3-8b-bnb-4bit",
+        max_seq_length=2048,
+        dtype=None,
+        load_in_4bit=True,
+    )
     return templates.TemplateResponse("index.html", {"request": request})
 
 
