@@ -1,5 +1,5 @@
-# docker compose -f docker-compose.yml -p chatbot_service up -d --build
-# docker compose -f docker-compose.yml -p chatbot_service down -v
+# docker compose -f api/docker-compose.yml -p chatbot_service up --build -d
+# docker compose -f api/docker-compose.yml -p chatbot_service down -v
 
 version: "3.8"
 

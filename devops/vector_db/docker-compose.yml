@@ -1,5 +1,6 @@
-# sudo docker compose -f docker-compose.yml -p vector_service up -d --build
-# docker compose -f docker-compose.yml -p vector_service down -v
+# docker network create chatbot_network
+# docker compose -f devops/vector_db/docker-compose.yml -p vector_service up --build -d
+# docker compose -f devops/vector_db/docker-compose.yml -p vector_service down -v
 
 version: '3.5'
 

@@ -19,10 +19,10 @@ RUN apt-get update && \
 WORKDIR /app
 ENV PYTHONPATH=/app
 # Copy requirements.txt from the build context into the container
-COPY ./api/requirements-gpu.txt .
+COPY ./requirements.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir --break-system-packages -r requirements-gpu.txt
+RUN pip install --no-cache-dir --break-system-packages -r requirements.txt
 
 # Copy the entire context into /app
 COPY . /app
