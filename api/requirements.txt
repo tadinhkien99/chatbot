@@ -21,9 +21,9 @@ gguf==0.6.0
 sentencepiece==0.2.0
 uvicorn==0.23.2
 unsloth[cu124-torch260] @ git+https://github.com/unslothai/unsloth.git
-bitsandbytes==0.44.1
+bitsandbytes==0.45.1
 unsloth-zoo==2025.2.7
-xformers==0.0.28.post2
+xformers
 peft==0.14.0
 celery[redis]==5.4.0
 redis==5.2.1
