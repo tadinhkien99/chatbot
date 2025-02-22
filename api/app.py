@@ -33,11 +33,12 @@ app.secret_key = config.SECRET_KEY  # Store secret key in app attribute
 @app.on_event("startup")
 def start_test():
     model, tokenizer = FastLanguageModel.from_pretrained(
-        model_name="unsloth/llama-3-8b-bnb-4bit",
+        model_name="unsloth/DeepSeek-R1-Distill-Qwen-14B-unsloth-bnb-4bit",
         max_seq_length=2048,
         dtype=None,
         load_in_4bit=True,
     )
+    print("Model loaded successfully")
 
 @app.get("/")
 async def read_root(request: Request):
