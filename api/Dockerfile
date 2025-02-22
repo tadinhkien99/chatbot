@@ -4,14 +4,8 @@ FROM pytorch/pytorch:2.5.0-cuda12.4-cudnn9-runtime
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        python3-pip \
-        libsndfile1 \
-        build-essential \
-        cmake \
-        libgtk-3-dev \
-        cargo \
-        libboost-all-dev && \
+    apt-get install -y --no-install-recommends python3-pip libsndfile1 build-essential cmake libgtk-3-dev \
+    cargo libboost-all-dev git gcc g++ python3-dev && \
     rm -rf /var/lib/apt/lists/*
 
 
