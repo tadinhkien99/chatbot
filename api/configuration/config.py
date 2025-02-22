@@ -7,5 +7,5 @@ import yaml
 
 
 class Config:
-    with open("./api/config.yml", "r") as ymlfile:
+    with open("./configuration/config.yml", "r") as ymlfile:
         cfg = yaml.load(ymlfile, yaml.SafeLoader)
