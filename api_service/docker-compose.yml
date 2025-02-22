@@ -1,0 +1,59 @@
+# docker compose -f docker-compose.yml -p chatbot_service up -d --build
+# docker compose -f docker-compose.yml -p chatbot_service down -v
+
+version: "3.8"
+
+services:
+  chatbot_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chatbot_service
+    ports:
+      - "8009:8009"
+    environment:
+      SERVICE: app
+      ENV: production
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - shared_temp:/app/shared_temp
+    depends_on:
+      - redis
+      - worker
+    networks:
+      - chatbot_network
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery_worker
+    environment:
+      SERVICE: worker
+      ENV: production
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - shared_temp:/app/shared_temp
+    depends_on:
+      - redis
+    networks:
+      - chatbot_network
+
+  redis:
+    image: redis:latest
+    container_name: redis_queue
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - chatbot_network
+
+volumes:
+  shared_temp:
+
+networks:
+  chatbot_network:
+    external: true
+
+
+
