@@ -20,7 +20,7 @@ sentence-transformers==3.0.1
 gguf==0.6.0
 sentencepiece==0.2.0
 uvicorn==0.23.2
-unsloth[cu124-torch250] @ git+https://github.com/unslothai/unsloth.git@ed7673b35097ada1a5e66afc7d0c9cf22441bf6c
+unsloth[cu124-torch250] @ git+https://github.com/unslothai/unsloth.git@027b5100c7492bce025fe2f03681f440843e4666
 bitsandbytes==0.44.1
 unsloth-zoo==2025.2.6
 xformers==0.0.28.post2
