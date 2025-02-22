@@ -30,15 +30,17 @@ class Config:
 config = Config()
 app.secret_key = config.SECRET_KEY  # Store secret key in app attribute
 
-
-@app.get("/")
-async def read_root(request: Request):
+@app.on_event("startup")
+def start_test():
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name="unsloth/llama-3-8b-bnb-4bit",
         max_seq_length=2048,
         dtype=None,
         load_in_4bit=True,
     )
+
+@app.get("/")
+async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
