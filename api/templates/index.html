@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input and Result UI</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 60%;
+            max-width: 800px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 80%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 2px solid #007BFF;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #0056b3;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 80%;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #444;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .result-card {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-card h3 {
+            font-size: 18px;
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+
+        .result-card p {
+            font-size: 14px;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .result-card .distance {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+    <link rel="stylesheet" href="/static/styles.css">
+
+</head>
+<body>
+    <div class="container">
+        <h2>Enter a Value</h2>
+        <input type="file" id="file" accept=".xlsx, .xls, .csv" />
+        <input type="text" id="userInput" placeholder="Type something...">
+        <button onclick="displayResult()">Submit</button>
+        
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        async function displayResult() {
+            let inputValue = document.getElementById("userInput").value;
+
+            // Handle file upload if exists
+            let fileInput = document.getElementById("file");
+            let file = fileInput.files[0];
+
+            if (file) {
+                // If a file is uploaded, send the file to the upload_excel route
+                let formData = new FormData();
+                formData.append("file", file);
+
+                // Upload file to the server
+                let uploadResponse = await fetch("/upload_excel", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                let uploadData = await uploadResponse.json();
+                if (uploadData.success) {
+                    console.log("File uploaded successfully.");
+                } else {
+                    console.error("File upload failed.");
+                }
+            }
+
+            // Proceed with the search if the text input is provided
+            if (!inputValue.trim()) {
+                document.getElementById("result").innerHTML = "<p style='color: #ff4d4d;'>Please enter a query.</p>";
+                return;
+            }
+
+            // Send request to FastAPI search API
+            let response = await fetch("/search", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({ "query": inputValue }),
+            });
+
+            let data = await response.json();
+
+            // Display results
+            let resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = ""; // Clear previous results
+
+            if (data.results && data.results.length > 0) {
+                data.results.forEach((item, index) => {
+                    let card = document.createElement("div");
+                    card.classList.add("result-card");
+                    
+                    let title = document.createElement("h3");
+                    title.innerText = `Match ${index + 1}: ${item.col1}`;
+                    
+                    let description = document.createElement("p");
+                    description.innerText = `Search Text: ${item.search_text}`;
+                    
+                    let distance = document.createElement("p");
+                    distance.classList.add("distance");
+                    distance.innerText = `Distance: ${item.distance.toFixed(2)}`;
+
+                    card.appendChild(title);
+                    card.appendChild(description);
+                    card.appendChild(distance);
+                    
+                    resultDiv.appendChild(card);
+                });
+            } else {
+                resultDiv.innerHTML = "<p style='color: #ff4d4d;'>No results found.</p>";
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+

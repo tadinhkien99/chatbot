@@ -1,0 +1,96 @@
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 60%;
+            max-width: 800px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 80%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 2px solid #007BFF;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #0056b3;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 80%;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #444;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .result-card {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-card h3 {
+            font-size: 18px;
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+
+        .result-card p {
+            font-size: 14px;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .result-card .distance {
+            font-weight: bold;
+            color: #333;
+        }
