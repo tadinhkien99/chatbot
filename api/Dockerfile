@@ -1,5 +1,5 @@
 # Use the official PyTorch image with CUDA support, which includes Python
-FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime
+FROM pytorch/pytorch:2.5.0-cuda12.4-cudnn9-devel
 
 ENV DEBIAN_FRONTEND=noninteractive
 

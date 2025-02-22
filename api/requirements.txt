@@ -1,4 +1,4 @@
---extra-index-url https://download.pytorch.org/whl/cu124
+--extra-index-url https://download.pytorch.org/whl/cu121
 
 fastapi==0.108.0
 starlette==0.31.1
@@ -10,7 +10,7 @@ PyYAML==6.0.1
 pyarrow==16.1.0
 PyMySQL==1.1.1
 pandas==2.2.2
-torch==2.6.0
+torch==2.5.0
 transformers==4.48.3
 cryptography==42.0.8
 pymilvus==2.4.4
@@ -20,10 +20,10 @@ sentence-transformers==3.0.1
 gguf==0.6.0
 sentencepiece==0.2.0
 uvicorn==0.23.2
-unsloth[cu124-torch260] @ git+https://github.com/unslothai/unsloth.git
-bitsandbytes==0.45.1
+unsloth[cu121-torch250] @ git+https://github.com/unslothai/unsloth.git
+bitsandbytes==0.44.1
 unsloth-zoo==2025.2.7
-xformers
+xformers==0.0.28.post2
 peft==0.14.0
 celery[redis]==5.4.0
 redis==5.2.1
