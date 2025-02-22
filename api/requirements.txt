@@ -1,5 +1,8 @@
 --extra-index-url https://download.pytorch.org/whl/cu121
 
+fastapi==0.108.0
+starlette==0.31.1
+requests==2.31.0
 numpy==1.24.0
 SQLAlchemy==1.4.36
 pika==1.3.2
@@ -14,11 +17,6 @@ transformers==4.48.3
 cryptography==42.0.8
 pymilvus==2.4.4
 psycopg2-binary==2.9.9
-duckdb==1.0.0
-flask[async]
-Flask==3.0.3
-Flask-Cors==4.0.1
-pykeepass==4.1.0
 gunicorn==22.0.0
 sentence-transformers==3.0.1
 gguf==0.6.0
@@ -29,3 +27,12 @@ bitsandbytes==0.44.1
 unsloth-zoo==2025.2.7
 xformers==0.0.28.post2
 peft==0.14.0
+celery[redis]==5.4.0
+redis==5.2.1
+aiofiles==24.1.0
+pydantic==2.10.3
+python-multipart==0.0.20
+PyYAML==6.0.1
+protobuf==4.25.6
+tiktoken==0.7.0
+sentencepiece==0.2.0
