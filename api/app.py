@@ -1,10 +1,11 @@
 import warnings
-import unsloth
+
 import uvicorn
-from fastapi import FastAPI, Request
+from FlagEmbedding import BGEM3FlagModel
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
-from sentence_transformers import SentenceTransformer
+from pydantic import BaseModel
 from unsloth import FastLanguageModel
 
 warnings.filterwarnings("ignore")
@@ -18,10 +19,6 @@ templates = Jinja2Templates(directory="./templates")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 
-# Assume llm_api is a FastAPI router
-# from your_llm_api_module import llm_api_router
-# app.include_router(llm_api_router)
-
 # Load configuration
 class Config:
     SECRET_KEY = "your-secret-key"
@@ -30,19 +27,55 @@ class Config:
 config = Config()
 app.secret_key = config.SECRET_KEY  # Store secret key in app attribute
 
+# Load models
+global_models = {
+    "llm_model": None,
+    "llm_tokenizer": None,
+    "embedding_model": None
+}
+
+
 @app.on_event("startup")
 def start_test():
-    model, tokenizer = FastLanguageModel.from_pretrained(
-        model_name="unsloth/DeepSeek-R1-Distill-Qwen-14B-unsloth-bnb-4bit",
-        max_seq_length=2048,
-        dtype=None,
-        load_in_4bit=True,
-    )
+    llm_model, llm_tokenizer = FastLanguageModel.from_pretrained(model_name="unsloth/phi-4-unsloth-bnb-4bit", max_seq_length=2048, dtype=None, load_in_4bit=True)
+    FastLanguageModel.for_inference(llm_model)
+    embedding_model = BGEM3FlagModel('BAAI/bge-base-en-v1.5', use_fp16=True)
+    global_models["llm_model"] = llm_model
+    global_models["llm_tokenizer"] = llm_tokenizer
+    global_models["embedding_model"] = embedding_model
     print("Model loaded successfully")
 
-@app.get("/")
-async def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+
+# Pydantic models for input validation
+class SimilarityRequest(BaseModel):
+    sentence1: str
+    sentence2: str
+
+
+class ChatRequest(BaseModel):
+    user_question: str
+
+
+@app.post("/similarity")
+async def similarity(request: SimilarityRequest):
+    embedding_model = global_models["embedding_model"]
+    embeddings_1 = embedding_model.encode([request.sentence1], batch_size=1, max_length=512)['dense_vecs']
+    embeddings_2 = embedding_model.encode([request.sentence2], batch_size=1, max_length=512)['dense_vecs']
+    similarity = embeddings_1 @ embeddings_2.T
+    return {"similarity": similarity[0][0]}
+
+
+@app.post("/chat")
+async def read_root(request: ChatRequest):
+    llm_model, llm_tokenizer = global_models["llm_model"], global_models["llm_tokenizer"]
+    messages = [
+        {"role": "system", "content": "You are a helpful assistant. Return the answer to the following question shortly."},
+        {"role": "user", "content": request.user_question}
+    ]
+    inputs = llm_tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True, return_tensors="pt").to("cuda")
+    outputs = llm_model.generate(input_ids=inputs, max_new_tokens=500, use_cache=True, temperature=0.1, min_p=0.1)
+    llm_tokenizer.batch_decode(outputs)
+    return {"response": llm_tokenizer.batch_decode(outputs)}
 
 
 if __name__ == "__main__":
