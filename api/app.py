@@ -62,7 +62,8 @@ async def similarity(request: SimilarityRequest):
     embeddings_1 = embedding_model.encode([request.sentence1], batch_size=1, max_length=512)['dense_vecs']
     embeddings_2 = embedding_model.encode([request.sentence2], batch_size=1, max_length=512)['dense_vecs']
     similarity = embeddings_1 @ embeddings_2.T
-    return {"similarity": similarity[0][0]}
+    similarity_score = similarity.item()
+    return {"similarity": similarity_score}
 
 
 @app.post("/chat")
