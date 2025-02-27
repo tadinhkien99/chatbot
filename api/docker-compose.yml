@@ -14,12 +14,12 @@ services:
     environment:
       SERVICE: app
       ENV: production
-      REDIS_URL: redis://redis:6379/0
+      REDIS_URL: redis://redis:6389/0
     volumes:
       - shared_temp:/app/shared_temp
     depends_on:
-      - redis
-      - worker
+      - redis_chatbot
+      - worker_chatbot
     networks:
       - chatbot_network
     deploy:
@@ -30,7 +30,7 @@ services:
               capabilities: [ "gpu" ]
               device_ids: [ "0" ]
 
-  worker:
+  worker_chatbot:
     build:
       context: .
       dockerfile: Dockerfile
@@ -38,20 +38,20 @@ services:
     environment:
       SERVICE: worker
       ENV: production
-      REDIS_URL: redis://redis:6379/0
+      REDIS_URL: redis://redis:6389/0
     volumes:
       - shared_temp:/app/shared_temp
     depends_on:
-      - redis
+      - redis_chatbot
     networks:
       - chatbot_network
 
-  redis:
+  redis_chatbot:
     image: redis:latest
     container_name: redis_queue_chatbot
     restart: always
     ports:
-      - "6379:6379"
+      - "6389:6389"
     networks:
       - chatbot_network
 
